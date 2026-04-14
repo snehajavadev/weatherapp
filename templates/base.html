@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}EarthPulse{% endblock %}</title>
+    <meta name="description" content="Explore real-time data visualizations of major world problems.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <div class="background-overlay"></div>
+    
+    <nav id="navbar">
+        <div class="logo"><a href="{{ url_for('index') }}" style="text-decoration: none; color: inherit;">Earth<span>Pulse</span></a></div>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('climate') }}">Climate</a></li>
+            <li><a href="{{ url_for('pollution') }}">Pollution</a></li>
+            <li><a href="{{ url_for('poverty') }}">Poverty</a></li>
+            <li><a href="{{ url_for('internet') }}">Connectivity</a></li>
+        </ul>
+    </nav>
+
+    {% block content %}{% endblock %}
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 EarthPulse Data. Information sourced from World Bank & NASA.</p>
+        </div>
+    </footer>
+
+    {% block scripts %}
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    {% endblock %}
+</body>
+</html>

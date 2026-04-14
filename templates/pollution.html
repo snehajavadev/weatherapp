@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Global Pollution | EarthPulse{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1>Global <span>Pollution</span></h1>
+        <p>Tracking air quality indicators and waste distribution across the globe.</p>
+    </div>
+</section>
+
+<main class="container">
+    <div class="stats-row">
+        <div class="chart-box glass">
+            <h3>Air Quality Index (AQI) by Country</h3>
+            <div class="chart-wrapper">
+                <canvas id="aqiChart"></canvas>
+            </div>
+            <p class="chart-desc">Average PM2.5 levels per cubic meter.</p>
+        </div>
+        
+        <div class="chart-box glass">
+            <h3>Global Waste Generation by Sector</h3>
+            <div class="chart-wrapper">
+                <canvas id="wasteChart"></canvas>
+            </div>
+            <p class="chart-desc">Percentage contribution to total global waste.</p>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const data = {{ data | tojson }};
+    
+    // AQI Chart
+    new Chart(document.getElementById('aqiChart'), {
+        type: 'bar',
+        data: {
+            labels: data.countries,
+            datasets: [{
+                label: 'Avg PM2.5',
+                data: data.pm25,
+                backgroundColor: data.pm25.map(v => v > 100 ? '#ff2d55' : '#00f2ff'),
+                borderRadius: 8
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { grid: { display: false }, ticks: { color: '#aaa' } },
+                y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#aaa' } }
+            }
+        }
+    });
+
+    // Waste Chart
+    new Chart(document.getElementById('wasteChart'), {
+        type: 'doughnut',
+        data: {
+            labels: data.waste_sources,
+            datasets: [{
+                data: data.waste_values,
+                backgroundColor: ['#ff2d55', '#ffcc00', '#00e396', '#00b8ff'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '65%',
+            plugins: {
+                legend: { position: 'right', labels: { color: '#fff', padding: 20 } }
+            }
+        }
+    });
+</script>
+{% endblock %}

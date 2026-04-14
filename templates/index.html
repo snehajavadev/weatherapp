@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}EarthPulse | Global Crisis Monitor{% endblock %}
+
+{% block content %}
+<header class="hero">
+    <div class="hero-bg" style="background-image: url('{{ url_for('static', filename='img/hero.png') }}');"></div>
+    <div class="hero-content">
+        <h1 class="reveal">The State of Our <span>World</span></h1>
+        <p class="fade-in">A multi-dimensional view of global challenges through interactive data visualization.</p>
+        <div class="cta-group">
+            <a href="{{ url_for('climate') }}" class="btn">Start Exploring</a>
+        </div>
+    </div>
+</header>
+
+<main>
+    <section class="overview-grid data-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Priority Areas</h2>
+                <p>Select a category to dive deep into the data.</p>
+            </div>
+            <div class="grid-3">
+                <a href="{{ url_for('climate') }}" class="card glass">
+                    <div class="card-icon">🌡️</div>
+                    <h3>Climate Change</h3>
+                    <p>Temperature trends and CO2 concentration levels.</p>
+                </a>
+                <a href="{{ url_for('pollution') }}" class="card glass">
+                    <div class="card-icon">🏭</div>
+                    <h3>Pollution</h3>
+                    <p>Air quality indices and industrial waste by country.</p>
+                </a>
+                <a href="{{ url_for('poverty') }}" class="card glass">
+                    <div class="card-icon">📉</div>
+                    <h3>Poverty</h3>
+                    <p>Extreme poverty rates and regional distribution.</p>
+                </a>
+                <a href="{{ url_for('internet') }}" class="card glass">
+                    <div class="card-icon">🌐</div>
+                    <h3>Connectivity</h3>
+                    <p>Digital penetration and mobile user growth.</p>
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Reveal animation
+    document.addEventListener('DOMContentLoaded', () => {
+        const reveals = document.querySelectorAll('.data-section');
+        const windowHeight = window.innerHeight;
+
+        function revealSections() {
+            reveals.forEach(reveal => {
+                const elementTop = reveal.getBoundingClientRect().top;
+                if (elementTop < windowHeight - 150) {
+                    reveal.classList.add('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', revealSections);
+        revealSections();
+    });
+</script>
+{% endblock %}

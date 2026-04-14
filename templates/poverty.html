@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Poverty Index | EarthPulse{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1>Global <span>Poverty</span> Index</h1>
+        <p>Measuring progress in the fight against extreme poverty worldwide.</p>
+    </div>
+</section>
+
+<main class="container">
+    <div class="stats-row">
+        <div class="chart-box glass">
+            <h3>Extreme Poverty Rate Trend (%)</h3>
+            <div class="chart-wrapper">
+                <canvas id="povertyTrendChart"></canvas>
+            </div>
+            <p class="chart-desc">Percentage of population living on less than $2.15 a day.</p>
+        </div>
+        
+        <div class="chart-box glass">
+            <h3>Poverty Concentration by Region</h3>
+            <div class="chart-wrapper">
+                <canvas id="povertyRegionChart"></canvas>
+            </div>
+            <p class="chart-desc">Distribution of extreme poverty across major regions in 2024.</p>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const data = {{ data | tojson }};
+    
+    // Trend Chart
+    new Chart(document.getElementById('povertyTrendChart'), {
+        type: 'line',
+        data: {
+            labels: data.years,
+            datasets: [{
+                label: '% Poverty Rate',
+                data: data.rate,
+                borderColor: '#ffcc00',
+                backgroundColor: 'rgba(255, 204, 0, 0.1)',
+                fill: true,
+                pointRadius: 6,
+                pointHoverRadius: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#aaa' } },
+                x: { grid: { display: false }, ticks: { color: '#aaa' } }
+            }
+        }
+    });
+
+    // Region Chart
+    new Chart(document.getElementById('povertyRegionChart'), {
+        type: 'polarArea',
+        data: {
+            labels: data.regions,
+            datasets: [{
+                data: data.regional_poverty,
+                backgroundColor: [
+                    'rgba(255, 45, 85, 0.6)',
+                    'rgba(255, 204, 0, 0.6)',
+                    'rgba(0, 242, 255, 0.6)',
+                    'rgba(0, 227, 150, 0.6)'
+                ],
+                borderWidth: 1,
+                borderColor: '#ffffff33'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { color: '#fff', padding: 20 } }
+            },
+            scales: {
+                r: { grid: { color: 'rgba(255,255,255,0.1)' }, angleLines: { color: 'rgba(255,255,255,0.1)' }, ticks: { display: false } }
+            }
+        }
+    });
+</script>
+{% endblock %}

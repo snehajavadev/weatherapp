@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Internet Access | EarthPulse{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1>Global <span>Internet</span> Access</h1>
+        <p>Analyzing the digital divide and mobile connectivity growth worldwide.</p>
+    </div>
+</section>
+
+<main class="container">
+    <div class="stats-row">
+        <div class="chart-box glass">
+            <h3>Internet Penetration by Region (%)</h3>
+            <div class="chart-wrapper">
+                <canvas id="internetPenChart"></canvas>
+            </div>
+            <p class="chart-desc">Percentage of regional population with internet access.</p>
+        </div>
+        
+        <div class="chart-box glass">
+            <h3>Mobile Internet Users (Millions)</h3>
+            <div class="chart-wrapper">
+                <canvas id="mobileUsersChart"></canvas>
+            </div>
+            <p class="chart-desc">Total number of mobile-only internet users by region.</p>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const data = {{ data | tojson }};
+    
+    // Penetration Chart
+    new Chart(document.getElementById('internetPenChart'), {
+        type: 'radar',
+        data: {
+            labels: data.regions,
+            datasets: [{
+                label: 'Penetration Rate %',
+                data: data.penetration,
+                backgroundColor: 'rgba(0, 242, 255, 0.2)',
+                borderColor: '#00f2ff',
+                pointBackgroundColor: '#00f2ff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                r: {
+                    angleLines: { color: 'rgba(255,255,255,0.1)' },
+                    grid: { color: 'rgba(255,255,255,0.1)' },
+                    pointLabels: { color: '#aaa', font: { size: 12 } },
+                    ticks: { display: false }
+                }
+            }
+        }
+    });
+
+    // Mobile Users Chart
+    new Chart(document.getElementById('mobileUsersChart'), {
+        type: 'bar',
+        data: {
+            labels: data.regions,
+            datasets: [{
+                label: 'Users (Millions)',
+                data: data.mobile_users,
+                backgroundColor: '#9100ff',
+                borderRadius: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#aaa' } },
+                x: { grid: { display: false }, ticks: { color: '#aaa' } }
+            }
+        }
+    });
+</script>
+{% endblock %}

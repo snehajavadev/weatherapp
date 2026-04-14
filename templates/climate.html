@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Climate Change | EarthPulse{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1>Climate Change <span>Statistics</span></h1>
+        <p>Analyzing global temperature rise and atmospheric CO2 concentrations.</p>
+    </div>
+</section>
+
+<main class="container">
+    <div class="stats-row">
+        <div class="chart-box glass">
+            <h3>Global Temperature Anomaly (°C)</h3>
+            <div class="chart-wrapper">
+                <canvas id="tempChart"></canvas>
+            </div>
+            <p class="chart-desc">Variance from 1951-1980 mean global temperature.</p>
+        </div>
+        
+        <div class="chart-box glass">
+            <h3>Carbon Dioxide (CO2) Concentration</h3>
+            <div class="chart-wrapper">
+                <canvas id="co2Chart"></canvas>
+            </div>
+            <p class="chart-desc">Atmospheric CO2 levels in parts per million (ppm).</p>
+        </div>
+    </div>
+
+    <div class="insight-cards">
+        <div class="insight-card glass">
+            <h4>Record Warmth</h4>
+            <p>2023 was the warmest year since record-keeping began in 1880.</p>
+        </div>
+        <div class="insight-card glass">
+            <h4>Ocean Heating</h4>
+            <p>90% of global warming is occurring in the ocean, raising sea levels.</p>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const data = {{ data | tojson }};
+    
+    // Temperature Chart
+    new Chart(document.getElementById('tempChart'), {
+        type: 'line',
+        data: {
+            labels: data.labels,
+            datasets: [{
+                label: 'Temp Anomaly (°C)',
+                data: data.temperature,
+                borderColor: '#00f2ff',
+                backgroundColor: 'rgba(0, 242, 255, 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { labels: { color: '#fff' } } },
+            scales: {
+                y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#aaa' } },
+                x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#aaa' } }
+            }
+        }
+    });
+
+    // CO2 Chart
+    new Chart(document.getElementById('co2Chart'), {
+        type: 'line',
+        data: {
+            labels: data.labels,
+            datasets: [{
+                label: 'CO2 ppm',
+                data: data.co2_levels,
+                borderColor: '#ff2d55',
+                backgroundColor: 'rgba(255, 45, 85, 0.1)',
+                fill: true,
+                borderDash: [5, 5]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { labels: { color: '#fff' } } },
+            scales: {
+                y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#aaa' } },
+                x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#aaa' } }
+            }
+        }
+    });
+</script>
+{% endblock %}
