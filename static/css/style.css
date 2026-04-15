@@ -190,6 +190,12 @@ body {
     margin-bottom: 1rem;
 }
 
+.mini-chart {
+    height: 120px;
+    margin-top: 1.5rem;
+    pointer-events: none;
+}
+
 .btn {
     display: inline-block;
     padding: 1rem 2.5rem;
@@ -410,8 +416,42 @@ body {
 }
 
 /* Container Utility */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    width: 100%;
+.weather-pulse-section {
+    margin-bottom: 4rem;
+}
+
+.weather-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.weather-node {
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.node-city {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.node-temp {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0.5rem 0;
+    color: var(--accent-color);
+}
+
+.node-wind {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.loading {
+    opacity: 0.5;
+    animation: pulse 2s infinite;
 }

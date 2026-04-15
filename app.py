@@ -2,6 +2,7 @@ from flask import Flask, render_template, jsonify
 import random
 import time
 from datetime import datetime
+import requests
 
 app = Flask(__name__)
 
@@ -69,6 +70,34 @@ def live_metrics():
             {"type": "Connectivity", "msg": f"New satellite link established in {random.choice(['Nigeria', 'Bolivia', 'Vietnam'])}"}
         ]
     })
+
+@app.route('/api/weather')
+def get_weather():
+    # Fetch real weather for a few key coordinates
+    locations = {
+        'Tokyo': {'lat': 35.6895, 'lon': 139.6917},
+        'London': {'lat': 51.5074, 'lon': -0.1278},
+        'New York': {'lat': 40.7128, 'lon': -74.0060},
+        'Sydney': {'lat': -33.8688, 'lon': 151.2093},
+        'Cairo': {'lat': 30.0444, 'lon': 31.2357}
+    }
+    
+    weather_data = []
+    try:
+        for city, coords in locations.items():
+            url = f"https://api.open-meteo.com/v1/forecast?latitude={coords['lat']}&longitude={coords['lon']}&current_weather=true"
+            response = requests.get(url, timeout=5)
+            if response.status_code == 200:
+                curr = response.json()['current_weather']
+                weather_data.append({
+                    'city': city,
+                    'temp': curr['temperature'],
+                    'wind': curr['windspeed'],
+                    'code': curr['weathercode']
+                })
+        return jsonify(weather_data)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

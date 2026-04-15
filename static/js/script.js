@@ -7,10 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
             legend: {
                 labels: {
                     color: '#ffffff',
-                    font: {
-                        family: 'Outfit',
-                        size: 14
-                    }
+                    font: { family: 'Outfit', size: 14 }
                 }
             },
             tooltip: {
@@ -33,9 +30,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // 1. Climate Change Chart (Global Temperature Anomaly)
-    const climateCtx = document.getElementById('climateChart').getContext('2d');
-    new Chart(climateCtx, {
+    // Helper function to safe-init charts
+    const initChart = (id, config) => {
+        const el = document.getElementById(id);
+        if (el) return new Chart(el.getContext('2d'), config);
+        return null;
+    };
+
+    // 1. Climate Change Chart
+    initChart('climateChart', {
         type: 'line',
         data: {
             labels: ['1960', '1970', '1980', '1990', '2000', '2010', '2020', '2024'],
@@ -53,63 +56,50 @@ document.addEventListener('DOMContentLoaded', () => {
         options: chartOptions
     });
 
-    // 2. Air Pollution Chart (AQI Comparison - Typical peak values)
-    const pollutionCtx = document.getElementById('pollutionChart').getContext('2d');
-    new Chart(pollutionCtx, {
+    // 2. Air Pollution Chart
+    initChart('pollutionChart', {
         type: 'bar',
         data: {
-            labels: ['New Delhi', 'Beijing', 'Cairo', 'Mexico City', 'Jakarta', 'London', 'New York'],
+            labels: ['India', 'China', 'Egypt', 'Mexico', 'Indonesia', 'UK', 'USA'],
             datasets: [{
                 label: 'Avg Daily AQI (PM2.5)',
                 data: [185, 142, 110, 95, 88, 35, 28],
-                backgroundColor: [
-                    '#ff2d55', '#ff2d55', '#ff9f40', '#ff9f40', '#ffcc00', '#00e396', '#00e396'
-                ],
+                backgroundColor: ['#ff2d55', '#ff2d55', '#ff9f40', '#ff9f40', '#ffcc00', '#00e396', '#00e396'],
                 borderRadius: 10
             }]
         },
         options: {
             ...chartOptions,
-            plugins: {
-                ...chartOptions.plugins,
-                legend: { display: false }
-            }
+            plugins: { ...chartOptions.plugins, legend: { display: false } }
         }
     });
 
-    // 3. Poverty Chart (Global Extreme Poverty Rate)
-    const povertyCtx = document.getElementById('povertyChart').getContext('2d');
-    new Chart(povertyCtx, {
+    // 3. Poverty Chart
+    initChart('povertyChart', {
         type: 'line',
         data: {
             labels: ['1990', '2000', '2010', '2015', '2019', '2022', '2024'],
             datasets: [{
-                label: '% Living below $2.15/day',
+                label: '% Poverty Rate',
                 data: [37.8, 29.1, 15.7, 10.1, 8.4, 9.3, 8.9],
                 borderColor: '#ffcc00',
-                backgroundColor: 'transparent',
                 borderWidth: 3,
                 pointRadius: 6,
-                pointHoverRadius: 8,
                 pointBackgroundColor: '#ffcc00'
             }]
         },
         options: chartOptions
     });
 
-    // 4. Internet Access Chart (Regional Penetration %)
-    const internetCtx = document.getElementById('internetChart').getContext('2d');
-    new Chart(internetCtx, {
+    // 4. Internet Access Chart
+    initChart('internetChart', {
         type: 'doughnut',
         data: {
             labels: ['N. America', 'Europe', 'East Asia', 'Latin Am.', 'S. Asia', 'Africa'],
             datasets: [{
                 data: [94, 88, 75, 70, 45, 36],
-                backgroundColor: [
-                    '#00f2ff', '#00b8ff', '#0080ff', '#4b00ff', '#9100ff', '#e100ff'
-                ],
-                borderWidth: 0,
-                hoverOffset: 15
+                backgroundColor: ['#00f2ff', '#00b8ff', '#0080ff', '#4b00ff', '#9100ff', '#e100ff'],
+                borderWidth: 0
             }]
         },
         options: {
@@ -117,38 +107,36 @@ document.addEventListener('DOMContentLoaded', () => {
             cutout: '70%',
             plugins: {
                 ...chartOptions.plugins,
-                legend: {
-                    position: 'right',
-                    labels: {
-                        color: '#ffffff',
-                        padding: 20
-                    }
-                }
+                legend: { position: 'right', labels: { color: '#ffffff', padding: 20 } }
             }
         }
     });
 
-    // Simple reveal animation on scroll
-    const reveals = document.querySelectorAll('.data-section');
+    // Reveal animation
+    const reveals = document.querySelectorAll('.reveal, .data-section');
     const windowHeight = window.innerHeight;
 
     function revealSections() {
         reveals.forEach(reveal => {
             const elementTop = reveal.getBoundingClientRect().top;
-            if (elementTop < windowHeight - 150) {
+            if (elementTop < windowHeight - 100) {
+                reveal.classList.add('active');
+                // Support for old transition style
                 reveal.style.opacity = '1';
                 reveal.style.transform = 'translateY(0)';
             }
         });
     }
 
-    // Initial styles for animation
-    reveals.forEach(reveal => {
-        reveal.style.opacity = '0';
-        reveal.style.transform = 'translateY(50px)';
-        reveal.style.transition = 'all 1s ease-out';
+    // Set initial state for data-sections if not already reveal class
+    document.querySelectorAll('.data-section').forEach(s => {
+        if (!s.classList.contains('reveal')) {
+            s.style.opacity = '0';
+            s.style.transform = 'translateY(50px)';
+            s.style.transition = 'all 1s ease-out';
+        }
     });
 
     window.addEventListener('scroll', revealSections);
-    revealSections(); // Trigger on load
+    revealSections();
 });

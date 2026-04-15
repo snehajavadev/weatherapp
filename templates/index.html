@@ -27,21 +27,33 @@
                     <div class="card-icon">🌡️</div>
                     <h3>Climate Change</h3>
                     <p>Temperature trends and CO2 concentration levels.</p>
+                    <div class="mini-chart">
+                        <canvas id="climateChart"></canvas>
+                    </div>
                 </a>
                 <a href="{{ url_for('pollution') }}" class="card glass">
                     <div class="card-icon">🏭</div>
                     <h3>Pollution</h3>
                     <p>Air quality indices and industrial waste by country.</p>
+                    <div class="mini-chart">
+                        <canvas id="pollutionChart"></canvas>
+                    </div>
                 </a>
                 <a href="{{ url_for('poverty') }}" class="card glass">
                     <div class="card-icon">📉</div>
                     <h3>Poverty</h3>
                     <p>Extreme poverty rates and regional distribution.</p>
+                    <div class="mini-chart">
+                        <canvas id="povertyChart"></canvas>
+                    </div>
                 </a>
                 <a href="{{ url_for('internet') }}" class="card glass">
                     <div class="card-icon">🌐</div>
                     <h3>Connectivity</h3>
                     <p>Digital penetration and mobile user growth.</p>
+                    <div class="mini-chart">
+                        <canvas id="internetChart"></canvas>
+                    </div>
                 </a>
             </div>
         </div>
