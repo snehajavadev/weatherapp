@@ -11,6 +11,28 @@
 </section>
 
 <main class="container">
+    <!-- TIME TRAVEL MODE -->
+    <div class="glass reveal" style="padding: 3rem; margin-bottom: 4rem; text-align: center;">
+        <h3 style="color: var(--accent-neon-purple); text-transform: uppercase; letter-spacing: 2px;">⏳ Time Travel Mode</h3>
+        <p>Control history and predict the future. Shift the year to see the impact.</p>
+        <br>
+        <input type="range" id="year-slider" min="2024" max="2100" value="2024" style="width: 100%; cursor: pointer;">
+        <div id="year-display" style="font-size: 2.5rem; font-weight: 800; margin: 1rem 0;">2024</div>
+        <div class="grid-3" style="text-align: left;">
+            <div class="glass counter-card">
+                <div class="counter-label">Estimated CO2</div>
+                <div class="counter-value" id="pred-co2">419.0 ppm</div>
+            </div>
+            <div class="glass counter-card">
+                <div class="counter-label">Sea Level Rise</div>
+                <div class="counter-value" id="pred-sea">+0.0 cm</div>
+            </div>
+            <div class="glass counter-card">
+                <div class="counter-label">Life Expectancy Impact</div>
+                <div class="counter-value" id="pred-health">-0.0%</div>
+            </div>
+        </div>
+    </div>
     <div class="stats-row">
         <div class="chart-box glass">
             <h3>Global Temperature Anomaly (°C)</h3>
@@ -95,5 +117,23 @@
             }
         }
     });
+    // Time Travel Logic
+    const slider = document.getElementById('year-slider');
+    const yearDisplay = document.getElementById('year-display');
+    const predCo2 = document.getElementById('pred-co2');
+    const predSea = document.getElementById('pred-sea');
+    
+    slider.addEventListener('input', async () => {
+        const year = slider.value;
+        yearDisplay.innerText = year;
+        
+        const res = await fetch(`/api/predict?year=${year}`);
+        const pred = await res.json();
+        
+        predCo2.innerText = pred.co2_est + ' ppm';
+        predSea.innerText = '+' + pred.sea_level_rise_cm + ' cm';
+        document.getElementById('pred-health').innerText = `-${((year-2024)*0.1).toFixed(1)}%`;
+    });
+
 </script>
 {% endblock %}

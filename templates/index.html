@@ -14,6 +14,12 @@
 <header class="hero">
     <div id="globe-canvas" class="hero-globe-container"></div>
     <h1 class="reveal">Pulse of the <span>Whole Earth</span></h1>
+    
+    <!-- Reality Shock Ticker -->
+    <div class="shock-ticker reveal">
+        <div class="shock-item"><span id="plastic-total">0</span> kg of plastic entered the ocean since you arrived</div>
+        <div class="shock-item"><span id="hunger-deaths">0</span> deaths from hunger worldwide during your visit</div>
+    </div>
     <p class="reveal" style="max-width: 600px; color: var(--text-secondary); margin-bottom: 2rem;">
         Welcome to the reality check. A real-time monitoring system of global crisis, 
         inequality, and the state of human existence.
@@ -111,6 +117,43 @@
             <h3>Conflict & Safety</h3>
             <p>War zone tracking and military vs education spending comparisons.</p>
         </a>
+
+        <!-- FEATURE: Born In Simulator -->
+        <a href="{{ url_for('simulator') }}" class="elite-card reveal" style="border: 2px solid var(--accent-neon-green);">
+            <div class="label" style="color: var(--accent-neon-green);">Game Changer</div>
+            <span class="icon">👶</span>
+            <h3>If You Were Born In...</h3>
+            <p>Simulator: Experience your potential life stats if you were born in a different nation.</p>
+        </a>
+
+        <!-- FEATURE: Comparisons -->
+        <a href="{{ url_for('compare') }}" class="elite-card reveal">
+            <span class="icon">⚖️</span>
+            <h3>Compare Countries</h3>
+            <p>Side-by-side battle of stats: India vs USA vs China. GDP, Pollution, and Access.</p>
+        </a>
+
+        <!-- FEATURE: Personal Impact -->
+        <a href="{{ url_for('impact') }}" class="elite-card reveal">
+            <span class="icon">👣</span>
+            <h3>Personal Impact</h3>
+            <p>Calculate your diet, travel, and energy footprint vs the global average.</p>
+        </a>
+
+        <!-- FEATURE: Rankings -->
+        <a href="{{ url_for('rankings') }}" class="elite-card reveal">
+            <span class="icon">🔝</span>
+            <h3>Global Rankings</h3>
+            <p>Live leaderboards: Happiness, Healthcare, and the Green Energy race.</p>
+        </a>
+
+        <!-- FEATURE: Solutions -->
+        <a href="{{ url_for('solutions') }}" class="elite-card reveal">
+            <span class="icon">🧩</span>
+            <h3>Solutions Zone</h3>
+            <p>Hope & Innovation: Countries solving the crisis and real-world success stories.</p>
+        </a>
+
         <!-- Stories -->
         <a href="{{ url_for('stories') }}" class="elite-card reveal" style="border-color: var(--accent-neon-purple);">
             <span class="icon">📖</span>
@@ -159,17 +202,40 @@
 
     // Live Counters
     async function updateHeroStats() {
-        const res = await fetch('/api/live-metrics');
-        const data = await res.json();
-        document.getElementById('co2-val').innerText = data.co2_ppm.toFixed(3);
-        document.getElementById('temp-val').innerText = (data.temp_anomaly > 0 ? '+' : '') + data.temp_anomaly.toFixed(2) + '°C';
-        
-        let dCount = parseInt(data.deaths_today);
-        document.getElementById('deaths-val').innerText = dCount.toLocaleString();
+        try {
+            const res = await fetch('/api/live-metrics');
+            const data = await res.json();
+            document.getElementById('co2-val').innerText = data.co2_ppm.toFixed(3);
+            document.getElementById('temp-val').innerText = (data.temp_anomaly > 0 ? '+' : '') + data.temp_anomaly.toFixed(2) + '°C';
+            
+            let dCount = parseInt(data.deaths_today);
+            document.getElementById('deaths-val').innerText = dCount.toLocaleString();
+        } catch(e) {}
+    }
+
+    // Reality Shock Tickers
+    let plasticTotal = 0;
+    let hungerTotal = 0;
+    async function updateRealityShock() {
+        try {
+            const res = await fetch('/api/reality-shock');
+            const rates = await res.json();
+            
+            // Increment every second
+            setInterval(() => {
+                plasticTotal += rates.plastic_to_ocean_kg;
+                document.getElementById('plastic-total').innerText = plasticTotal.toLocaleString();
+                
+                // Hunger deaths is per min, so per sec is rates/60
+                hungerTotal += (rates.hunger_deaths_per_min / 60);
+                document.getElementById('hunger-deaths').innerText = Math.floor(hungerTotal).toLocaleString();
+            }, 1000);
+        } catch(e) {}
     }
     
     setInterval(updateHeroStats, 5000);
     updateHeroStats();
+    updateRealityShock();
 
     // Reveal Logic
     const reveals = document.querySelectorAll('.reveal');

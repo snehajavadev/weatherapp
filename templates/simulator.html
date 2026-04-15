@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Born In... Simulator | EarthPulse{% endblock %}
+{% block content %}
+<div class="parallax-bg"></div>
+<section class="page-header reveal">
+    <div class="container">
+        <h1>If You Were <span>Born</span> In...</h1>
+        <p>A lottery of birth. Discover the statistics that would define your life based on geography.</p>
+    </div>
+</section>
+
+<main class="container reveal">
+    <div class="simulator-box glass">
+        <label>Select a Country:</label>
+        <select id="country-select" class="btn-neon" style="background: var(--bg-navy); width: 100%; border-radius: 12px; margin: 1rem 0;">
+            {% for name, stats in countries.items() %}
+                <option value="{{ name }}">{{ name }}</option>
+            {% endfor %}
+        </select>
+
+        <div id="sim-result" style="margin-top: 3rem;">
+            <!-- Stats will be injected here -->
+            <div class="grid-3">
+                <div class="glass counter-card">
+                    <div class="counter-label">Avg. Annual Income</div>
+                    <div class="counter-value" id="res-income">$0</div>
+                </div>
+                <div class="glass counter-card">
+                    <div class="counter-label">Life Expectancy</div>
+                    <div class="counter-value" id="res-life">0 Years</div>
+                </div>
+                <div class="glass counter-card">
+                    <div class="counter-label">Internet Access</div>
+                    <div class="counter-value" id="res-internet">0%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<style>
+.simulator-box { padding: 4rem; max-width: 900px; margin: 0 auto; }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const countries = {{ countries | tojson }};
+    const select = document.getElementById('country-select');
+    
+    function updateSim() {
+        const stats = countries[select.value];
+        document.getElementById('res-income').innerText = '$' + stats.income.toLocaleString();
+        document.getElementById('res-life').innerText = stats.life + ' Years';
+        document.getElementById('res-internet').innerText = stats.internet + '%';
+    }
+    
+    select.addEventListener('change', updateSim);
+    updateSim(); // Init
+</script>
+{% endblock %}
