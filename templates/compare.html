@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Compare Countries | EarthPulse{% endblock %}
+{% block content %}
+<div class="parallax-bg"></div>
+<section class="page-header reveal">
+    <div class="container">
+        <h1>Country <span>Comparison</span></h1>
+        <p>Battle of the stats. Compare any two nations across climate, health, and economy.</p>
+    </div>
+</section>
+
+<main class="container reveal">
+    <div class="stats-row">
+        <div class="glass counter-card">
+            <h3>India</h3>
+            <ul style="list-style: none; padding: 0; color: var(--text-secondary);">
+                <li>⚡ Energy: 42% Renewable</li>
+                <li>🌡️ Temp Delta: +0.8°C</li>
+                <li>🏭 PM2.5: 185 avg</li>
+            </ul>
+        </div>
+        <div class="glass counter-card" style="border-color: var(--accent-neon-purple);">
+            <h3>USA</h3>
+            <ul style="list-style: none; padding: 0; color: var(--text-secondary);">
+                <li>⚡ Energy: 20% Renewable</li>
+                <li>🌡️ Temp Delta: +1.2°C</li>
+                <li>🏭 PM2.5: 28 avg</li>
+            </ul>
+        </div>
+    </div>
+</main>
+{% endblock %}

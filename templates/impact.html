@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Personal Impact | EarthPulse{% endblock %}
+{% block content %}
+<div class="parallax-bg"></div>
+<section class="page-header reveal">
+    <div class="container">
+        <h1>Internal <span>Impact</span> Tracker</h1>
+        <p>Calculate your footprint. See how your lifestyle compares to the global mean.</p>
+    </div>
+</section>
+
+<main class="container reveal">
+    <div class="glass counter-card" style="max-width: 600px; margin: 0 auto; padding: 4rem;">
+        <h3>Footprint Estimator</h3>
+        <p style="color: var(--text-secondary); line-height: 1.6;">
+            Based on current global averages, a typical city resident produces 4.5 tons of CO2 annually. 
+            <br><br>
+            <strong>Status:</strong> Engine syncing with latest per-capita datasets.
+        </p>
+    </div>
+</main>
+{% endblock %}
