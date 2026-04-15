@@ -1,8 +1,11 @@
 from flask import Flask, render_template, jsonify
+import random
+import time
+from datetime import datetime
 
 app = Flask(__name__)
 
-# Global Datasets (Mocked for visualization)
+# Global Datasets
 DATASETS = {
     'climate': {
         'labels': ['1960', '1970', '1980', '1990', '2000', '2010', '2020', '2024'],
@@ -47,6 +50,25 @@ def poverty():
 @app.route('/internet')
 def internet():
     return render_template('internet.html', data=DATASETS['internet'])
+
+@app.route('/analytics')
+def analytics():
+    return render_template('analytics.html')
+
+@app.route('/api/live-metrics')
+def live_metrics():
+    # Simulate real-time metrics
+    return jsonify({
+        'timestamp': datetime.now().strftime('%H:%M:%S'),
+        'co2': round(419.0 + random.uniform(-0.01, 0.05), 3),
+        'temp_anomaly': round(1.15 + random.uniform(-0.02, 0.02), 2),
+        'active_sensors': random.randint(12400, 12500),
+        'events': [
+            {"type": "Climate", "msg": f"Temperature surge detected in {random.choice(['Arctic', 'Amazon', 'Sahara'])}"},
+            {"type": "Pollution", "msg": f"Air quality advisory in {random.choice(['Delhi', 'Beijing', 'Cairo'])}"},
+            {"type": "Connectivity", "msg": f"New satellite link established in {random.choice(['Nigeria', 'Bolivia', 'Vietnam'])}"}
+        ]
+    })
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics | EarthPulse Live Dashboard{% endblock %}
+
+{% block content %}
+<div class="analytics-container container">
+    <div class="dashboard-header reveal">
+        <h1>Real-Time <span>Global Analytics</span></h1>
+        <p>Live monitoring of terrestrial and atmospheric data streams.</p>
+    </div>
+
+    <div class="analytics-grid">
+        <!-- Live Counters -->
+        <div class="counter-card glass fade-in">
+            <div class="counter-label">Global CO2 Concentration</div>
+            <div class="counter-value" id="co2-counter">419.000</div>
+            <div class="counter-unit">PPM</div>
+            <div class="trend up">↑ 0.002 expected</div>
+        </div>
+        <div class="counter-card glass fade-in" style="animation-delay: 0.1s;">
+            <div class="counter-label">Global Temp Anomaly</div>
+            <div class="counter-value" id="temp-counter">1.15</div>
+            <div class="counter-unit">°C</div>
+            <div class="trend">Stable</div>
+        </div>
+        <div class="counter-card glass fade-in" style="animation-delay: 0.2s;">
+            <div class="counter-label">Active Monitoring Stations</div>
+            <div class="counter-value" id="stations-counter">12,450</div>
+            <div class="counter-unit">Live Nodes</div>
+            <div class="trend up">Syncing...</div>
+        </div>
+    </div>
+
+    <div class="main-chart-section glass reveal">
+        <div class="chart-header">
+            <h3>Live Atmospheric Data Stream</h3>
+            <div class="status-indicator">
+                <span class="dot"></span> LIVE
+            </div>
+        </div>
+        <div class="chart-container">
+            <canvas id="liveChart"></canvas>
+        </div>
+    </div>
+
+    <div class="events-section">
+        <h3 class="reveal">Recent Activity Logs</h3>
+        <div id="events-log" class="glass fade-in">
+            <!-- Events will be injected here -->
+            <div class="event-item">
+                <span class="event-type">System</span>
+                <span class="event-msg">Analytics engine initialized...</span>
+                <span class="event-time">Just now</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const ctx = document.getElementById('liveChart').getContext('2d');
+    const liveChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Simulated Data Pulse',
+                data: [],
+                borderColor: '#00f2fe',
+                backgroundColor: 'rgba(0, 242, 254, 0.1)',
+                borderWidth: 2,
+                tension: 0.4,
+                fill: true,
+                pointRadius: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                    ticks: { color: 'rgba(255, 255, 255, 0.5)' }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { color: 'rgba(255, 255, 255, 0.5)' }
+                }
+            },
+            plugins: {
+                legend: { display: false }
+            },
+            animation: {
+                duration: 1000,
+                easing: 'linear'
+            }
+        }
+    });
+
+    async function updateMetrics() {
+        try {
+            const response = await fetch('/api/live-metrics');
+            const data = await response.json();
+
+            // Update Counters
+            document.getElementById('co2-counter').innerText = data.co2.toFixed(3);
+            document.getElementById('temp-counter').innerText = data.temp_anomaly.toFixed(2);
+            document.getElementById('stations-counter').innerText = data.active_sensors.toLocaleString();
+
+            // Update Chart
+            const now = data.timestamp;
+            liveChart.data.labels.push(now);
+            liveChart.data.datasets[0].data.push(data.co2);
+
+            if (liveChart.data.labels.length > 20) {
+                liveChart.data.labels.shift();
+                liveChart.data.datasets[0].data.shift();
+            }
+            liveChart.update('none');
+
+            // Update Logs
+            const log = document.getElementById('events-log');
+            data.events.forEach(event => {
+                const item = document.createElement('div');
+                item.className = 'event-item fade-in';
+                item.innerHTML = `
+                    <span class="event-type ${event.type.toLowerCase()}">${event.type}</span>
+                    <span class="event-msg">${event.msg}</span>
+                    <span class="event-time">${now}</span>
+                `;
+                log.prepend(item);
+                if (log.children.length > 10) log.lastElementChild.remove();
+            });
+
+        } catch (error) {
+            console.error('Error fetching live metrics:', error);
+        }
+    }
+
+    // Update every 3 seconds
+    setInterval(updateMetrics, 3000);
+    updateMetrics(); // Initial call
+</script>
+{% endblock %}
