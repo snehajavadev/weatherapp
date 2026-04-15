@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Mental Health | EarthPulse{% endblock %}
+{% block content %}
+<div class="parallax-bg"></div>
+<section class="page-header reveal">
+    <div class="container">
+        <h1>Global <span>Mental Health</span> Pulse</h1>
+        <p>The invisible crisis. Tracking trends in anxiety, depression, and youth well-being.</p>
+    </div>
+</section>
+<main class="container reveal">
+    <div class="stats-row">
+        <div class="chart-box glass">
+            <h3>Depression & Anxiety Prevalence (%)</h3>
+            <div class="chart-container" style="height: 300px;"><canvas id="mentalChart"></canvas></div>
+        </div>
+        <div class="chart-box glass">
+            <h3>Global Suicide Rates (per 100k)</h3>
+            <div class="chart-container" style="height: 300px;"><canvas id="suicideChart"></canvas></div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+{% block scripts %}
+<script>
+    const data = {{ data | tojson }};
+    new Chart(document.getElementById('mentalChart'), {
+        type: 'line',
+        data: {
+            labels: ['2000', '2005', '2010', '2015', '2024'],
+            datasets: [{ label: 'Prevalence %', data: data.anxiety_depression, borderColor: 'var(--accent-neon-purple)', fill: true, backgroundColor: 'rgba(188, 19, 254, 0.1)' }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+    new Chart(document.getElementById('suicideChart'), {
+        type: 'bar',
+        data: {
+            labels: ['2000', '2005', '2010', '2015', '2024'],
+            datasets: [{ label: 'Rate', data: data.suicide_rates, backgroundColor: 'var(--accent-neon-red)' }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+</script>
+{% endblock %}

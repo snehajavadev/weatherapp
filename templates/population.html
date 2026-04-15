@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Population & Growth | EarthPulse{% endblock %}
+{% block content %}
+<div class="parallax-bg"></div>
+<section class="page-header reveal">
+    <div class="container">
+        <h1>Global <span>Population</span> Dynamics</h1>
+        <p>Analyzing growth trends, megacity expansion, and urbanization shifts.</p>
+    </div>
+</section>
+<main class="container reveal">
+    <div class="stats-row">
+        <div class="chart-box glass">
+            <h3>Population Growth (Billions)</h3>
+            <div class="chart-container" style="height: 300px;"><canvas id="popChart"></canvas></div>
+        </div>
+        <div class="chart-box glass">
+            <h3>Urban vs Rural Share (%)</h3>
+            <div class="chart-container" style="height: 300px;"><canvas id="urbanChart"></canvas></div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+{% block scripts %}
+<script>
+    const data = {{ data | tojson }};
+    new Chart(document.getElementById('popChart'), {
+        type: 'line',
+        data: {
+            labels: ['1950', '1975', '2000', '2024', '2050 Est.'],
+            datasets: [{ label: 'Growth', data: data.growth, borderColor: 'var(--accent-neon-blue)', fill: true, backgroundColor: 'rgba(0, 242, 255, 0.1)' }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+    new Chart(document.getElementById('urbanChart'), {
+        type: 'bar',
+        data: {
+            labels: ['1950', '1975', '2000', '2024', '2050 Est.'],
+            datasets: [{ label: 'Urban %', data: data.urban, backgroundColor: 'var(--accent-neon-green)' }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+</script>
+{% endblock %}

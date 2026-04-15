@@ -1,83 +1,181 @@
 {% extends "base.html" %}
 
-{% block title %}EarthPulse | Global Crisis Monitor{% endblock %}
+{% block title %}EarthPulse | The Reality Check{% endblock %}
+
+{% block head %}
+<!-- Three.js for Globe -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+{% endblock %}
 
 {% block content %}
+<div class="parallax-bg"></div>
+<div class="particles-overlay"></div>
+
 <header class="hero">
-    <div class="hero-bg" style="background-image: url('{{ url_for('static', filename='img/hero.png') }}');"></div>
-    <div class="hero-content">
-        <h1 class="reveal">The State of Our <span>World</span></h1>
-        <p class="fade-in">A multi-dimensional view of global challenges through interactive data visualization.</p>
-        <div class="cta-group">
-            <a href="{{ url_for('climate') }}" class="btn">Start Exploring</a>
-            <a href="{{ url_for('analytics') }}" class="btn btn-secondary">View Live Analytics</a>
+    <div id="globe-canvas" class="hero-globe-container"></div>
+    <h1 class="reveal">Pulse of the <span>Whole Earth</span></h1>
+    <p class="reveal" style="max-width: 600px; color: var(--text-secondary); margin-bottom: 2rem;">
+        Welcome to the reality check. A real-time monitoring system of global crisis, 
+        inequality, and the state of human existence.
+    </p>
+    
+    <!-- Live World Dashboard -->
+    <div class="live-world-dashboard reveal">
+        <div class="hero-counter">
+            <div class="label">CO2 Concentration</div>
+            <div class="value" id="co2-val">419.000</div>
+            <div style="font-size: 0.7rem; color: var(--accent-neon-green);">+0.002 ppm/hr</div>
         </div>
+        <div class="hero-counter">
+            <div class="label">Deaths Today</div>
+            <div class="value" id="deaths-val">154,200</div>
+            <div style="font-size: 0.7rem; color: var(--accent-neon-red);">Live Est.</div>
+        </div>
+        <div class="hero-counter">
+            <div class="label">Temp Anomaly</div>
+            <div class="value" id="temp-val">+1.15°C</div>
+            <div style="font-size: 0.7rem; color: var(--accent-neon-blue);">vs Baseline</div>
+        </div>
+    </div>
+
+    <div class="cta-group reveal" style="margin-top: 4rem;">
+        <button class="btn-neon" onclick="document.getElementById('explore').scrollIntoView()">Start Reality Check</button>
     </div>
 </header>
 
-<main>
-    <section class="overview-grid data-section">
-        <div class="container">
-            <div class="section-header">
-                <h2>Priority Areas</h2>
-                <p>Select a category to dive deep into the data.</p>
-            </div>
-            <div class="grid-3">
-                <a href="{{ url_for('climate') }}" class="card glass">
-                    <div class="card-icon">🌡️</div>
-                    <h3>Climate Change</h3>
-                    <p>Temperature trends and CO2 concentration levels.</p>
-                    <div class="mini-chart">
-                        <canvas id="climateChart"></canvas>
-                    </div>
-                </a>
-                <a href="{{ url_for('pollution') }}" class="card glass">
-                    <div class="card-icon">🏭</div>
-                    <h3>Pollution</h3>
-                    <p>Air quality indices and industrial waste by country.</p>
-                    <div class="mini-chart">
-                        <canvas id="pollutionChart"></canvas>
-                    </div>
-                </a>
-                <a href="{{ url_for('poverty') }}" class="card glass">
-                    <div class="card-icon">📉</div>
-                    <h3>Poverty</h3>
-                    <p>Extreme poverty rates and regional distribution.</p>
-                    <div class="mini-chart">
-                        <canvas id="povertyChart"></canvas>
-                    </div>
-                </a>
-                <a href="{{ url_for('internet') }}" class="card glass">
-                    <div class="card-icon">🌐</div>
-                    <h3>Connectivity</h3>
-                    <p>Digital penetration and mobile user growth.</p>
-                    <div class="mini-chart">
-                        <canvas id="internetChart"></canvas>
-                    </div>
-                </a>
-            </div>
-        </div>
+<main id="explore" style="padding-top: 5rem;">
+    <section class="section-grid">
+        <!-- Climate -->
+        <a href="{{ url_for('climate') }}" class="elite-card reveal">
+            <span class="icon">🌡️</span>
+            <h3>Climate Crisis</h3>
+            <p>Ice mass melting, extreme weather timelines, and sea level simulations.</p>
+        </a>
+        <!-- Pollution -->
+        <a href="{{ url_for('pollution') }}" class="elite-card reveal">
+            <span class="icon">🏭</span>
+            <h3>Pollution Pulse</h3>
+            <p>AQI by city, plastic waste hot-spots, and your personal impact calculator.</p>
+        </a>
+        <!-- Poverty -->
+        <a href="{{ url_for('poverty') }}" class="elite-card reveal">
+            <span class="icon">💸</span>
+            <h3>Wealth Inequality</h3>
+            <p>Wealth pyramid animations and daily income comparison of the 1% vs the rest.</p>
+        </a>
+        <!-- Connectivity -->
+        <a href="{{ url_for('internet') }}" class="elite-card reveal">
+            <span class="icon">📡</span>
+            <h3>Digital Divide</h3>
+            <p>Global offline population stats and regional speed parity comparison.</p>
+        </a>
+        <!-- Health -->
+        <a href="{{ url_for('health') }}" class="elite-card reveal">
+            <span class="icon">⚕️</span>
+            <h3>Health & Disease</h3>
+            <p>Global disease spread maps and healthcare access tiers across nations.</p>
+        </a>
+        <!-- Education -->
+        <a href="{{ url_for('education') }}" class="elite-card reveal">
+            <span class="icon">🎓</span>
+            <h3>Education Gap</h3>
+            <p>Literacy heatmaps and gender inequality stats in secondary schooling.</p>
+        </a>
+        <!-- Energy -->
+        <a href="{{ url_for('energy') }}" class="elite-card reveal">
+            <span class="icon">⚡</span>
+            <h3>Energy Shift</h3>
+            <p>Renewable vs fossil fuel mirrors and per-capita carbon footprint cards.</p>
+        </a>
+        <!-- Water -->
+        <a href="{{ url_for('water') }}" class="elite-card reveal">
+            <span class="icon">🌊</span>
+            <h3>Water Crisis</h3>
+            <p>Mapping water scarcity and future projections for the 2050 dry-zones.</p>
+        </a>
+        <!-- Population -->
+        <a href="{{ url_for('population') }}" class="elite-card reveal">
+            <span class="icon">🧬</span>
+            <h3>Population</h3>
+            <p>Megacity expansion maps and urban vs rural migration trends.</p>
+        </a>
+        <!-- Mental Health -->
+        <a href="{{ url_for('mental_health') }}" class="elite-card reveal">
+            <span class="icon">🧠</span>
+            <h3>Mental Health</h3>
+            <p>Social media impact graphs and global depression/anxiety trends.</p>
+        </a>
+        <!-- Conflict -->
+        <a href="{{ url_for('conflict') }}" class="elite-card reveal">
+            <span class="icon">⚔️</span>
+            <h3>Conflict & Safety</h3>
+            <p>War zone tracking and military vs education spending comparisons.</p>
+        </a>
+        <!-- Stories -->
+        <a href="{{ url_for('stories') }}" class="elite-card reveal" style="border-color: var(--accent-neon-purple);">
+            <span class="icon">📖</span>
+            <h3>Storytelling Mode</h3>
+            <p>Guided narratives: "The Story of Climate Change" and "The Poverty Trap".</p>
+        </a>
     </section>
 </main>
 {% endblock %}
 
 {% block scripts %}
 <script>
-    // Reveal animation
-    document.addEventListener('DOMContentLoaded', () => {
-        const reveals = document.querySelectorAll('.data-section');
-        const windowHeight = window.innerHeight;
+    // Three.js Globe Implementation
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    const container = document.getElementById('globe-canvas');
+    const size = container.clientWidth;
+    renderer.setSize(size, size);
+    container.appendChild(renderer.domElement);
 
-        function revealSections() {
-            reveals.forEach(reveal => {
-                const elementTop = reveal.getBoundingClientRect().top;
-                if (elementTop < windowHeight - 150) {
-                    reveal.classList.add('active');
-                }
-            });
-        }
-        window.addEventListener('scroll', revealSections);
-        revealSections();
+    const geometry = new THREE.SphereGeometry(2, 64, 64);
+    const material = new THREE.MeshPhongMaterial({
+        color: 0x00f2ff,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.3
     });
+    const globe = new THREE.Mesh(geometry, material);
+    scene.add(globe);
+
+    const light = new THREE.PointLight(0xffffff, 1, 100);
+    light.position.set(5, 5, 5);
+    scene.add(light);
+    scene.add(new THREE.AmbientLight(0x222222));
+
+    camera.position.z = 5;
+
+    function animate() {
+        requestAnimationFrame(animate);
+        globe.rotation.y += 0.002;
+        globe.rotation.x += 0.001;
+        renderer.render(scene, camera);
+    }
+    animate();
+
+    // Live Counters
+    async function updateHeroStats() {
+        const res = await fetch('/api/live-metrics');
+        const data = await res.json();
+        document.getElementById('co2-val').innerText = data.co2_ppm.toFixed(3);
+        document.getElementById('temp-val').innerText = (data.temp_anomaly > 0 ? '+' : '') + data.temp_anomaly.toFixed(2) + '°C';
+        
+        let dCount = parseInt(data.deaths_today);
+        document.getElementById('deaths-val').innerText = dCount.toLocaleString();
+    }
+    
+    setInterval(updateHeroStats, 5000);
+    updateHeroStats();
+
+    // Reveal Logic
+    const reveals = document.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('active'); });
+    }, { threshold: 0.1 });
+    reveals.forEach(r => obs.observe(r));
 </script>
 {% endblock %}

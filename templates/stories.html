@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Storytelling Mode | EarthPulse{% endblock %}
+{% block content %}
+<div class="parallax-bg"></div>
+<section class="page-header reveal">
+    <div class="container">
+        <h1>Global <span>Narratives</span></h1>
+        <p>Step through guided stories that explain the pulse of our planet.</p>
+    </div>
+</section>
+
+<main class="container reveal">
+    <div class="story-grid">
+        <div class="glass elite-card">
+            <div class="label" style="color: var(--accent-neon-blue);">Active Narrative</div>
+            <br>
+            <h3>The Story of Climate Change (1900–2025)</h3>
+            <p>A guided journey through temperature surges, glacial retreat, and the tipping points we face today.</p>
+            <br>
+            <button class="btn-neon" style="font-size: 0.8rem; padding: 0.8rem 2rem;">Launch Story</button>
+        </div>
+        
+        <div class="glass elite-card">
+            <div class="label" style="color: var(--accent-neon-red);">Coming Soon</div>
+            <br>
+            <h3>How Poverty Traps Nations</h3>
+            <p>An immersive data dive into systemic inequality and the feedback loops of regional poverty.</p>
+            <br>
+            <button class="btn-neon" style="font-size: 0.8rem; padding: 0.8rem 2rem;" disabled>Waitlisting...</button>
+        </div>
+
+        <div class="glass elite-card">
+            <div class="label" style="color: var(--accent-neon-green);">In Development</div>
+            <br>
+            <h3>A Day in the Life of the World</h3>
+            <p>Experience 24 hours of global stats as they happen: birth, death, energy, and digital pulses.</p>
+            <br>
+            <button class="btn-neon" style="font-size: 0.8rem; padding: 0.8rem 2rem;" disabled>Drafting...</button>
+        </div>
+    </div>
+</main>
+
+<style>
+.story-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 3rem;
+    margin-bottom: 5rem;
+}
+.label {
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+</style>
+{% endblock %}

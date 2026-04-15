@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Energy & Sustainability | EarthPulse{% endblock %}
+{% block content %}
+<div class="parallax-bg"></div>
+<section class="page-header reveal">
+    <div class="container">
+        <h1>Global <span>Energy</span> Transition</h1>
+        <p>Renewables vs Fossil Fuels. The race to zero emissions.</p>
+    </div>
+</section>
+<main class="container reveal">
+    <div class="stats-row">
+        <div class="chart-box glass">
+            <h3>Renewable Share Growth (%)</h3>
+            <div class="chart-container" style="height: 300px;"><canvas id="energyChart"></canvas></div>
+        </div>
+        <div class="chart-box glass">
+            <h3>Carbon Footprint per Capita</h3>
+            <div class="chart-container" style="height: 300px;"><canvas id="footprintChart"></canvas></div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+{% block scripts %}
+<script>
+    const data = {{ data | tojson }};
+    new Chart(document.getElementById('energyChart'), {
+        type: 'line',
+        data: {
+            labels: ['2000', '2005', '2010', '2015', '2020', '2024'],
+            datasets: [
+                { label: 'Renewable %', data: data.renewable_share, borderColor: 'var(--accent-neon-green)', fill: false },
+                { label: 'Fossil Fuel %', data: data.fossil_fuel, borderColor: 'var(--accent-neon-red)', fill: false }
+            ]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+    new Chart(document.getElementById('footprintChart'), {
+        type: 'bar',
+        data: {
+            labels: Object.keys(data.footprint_per_capita),
+            datasets: [{ data: Object.values(data.footprint_per_capita), backgroundColor: 'var(--accent-neon-blue)' }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+</script>
+{% endblock %}

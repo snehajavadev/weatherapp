@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Education Gap | EarthPulse{% endblock %}
+{% block content %}
+<div class="parallax-bg"></div>
+<section class="page-header reveal">
+    <div class="container">
+        <h1>Global <span>Education</span> Gap</h1>
+        <p>Literacy, dropout rates, and the root causes of systemic inequality.</p>
+    </div>
+</section>
+<main class="container reveal">
+    <div class="stats-row">
+        <div class="chart-box glass">
+            <h3>Global Literacy Growth (%)</h3>
+            <div class="chart-container" style="height: 300px;"><canvas id="literacyChart"></canvas></div>
+        </div>
+        <div class="chart-box glass">
+            <h3>Secondary Dropout Rate by Region</h3>
+            <div class="chart-container" style="height: 300px;"><canvas id="dropoutChart"></canvas></div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+{% block scripts %}
+<script>
+    const data = {{ data | tojson }};
+    new Chart(document.getElementById('literacyChart'), {
+        type: 'line',
+        data: {
+            labels: ['1970', '1980', '1990', '2000', '2015', '2024'],
+            datasets: [{ label: 'Literacy %', data: data.literacy, borderColor: 'var(--accent-neon-blue)', backgroundColor: 'rgba(0, 242, 255, 0.1)', fill: true }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+    new Chart(document.getElementById('dropoutChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Low Income', 'Lower Middle', 'Middle', 'Upper Middle', 'High Income'],
+            datasets: [{ label: 'Dropout %', data: data.dropout_rates, backgroundColor: 'var(--accent-neon-red)' }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+</script>
+{% endblock %}

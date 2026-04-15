@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Health & Disease | EarthPulse{% endblock %}
+{% block content %}
+<div class="parallax-bg"></div>
+<section class="page-header reveal">
+    <div class="container">
+        <h1>Global <span>Health</span> & Disease</h1>
+        <p>Monitoring mortality rates, disease spread, and healthcare accessibility.</p>
+    </div>
+</section>
+<main class="container reveal">
+    <div class="stats-row">
+        <div class="chart-box glass">
+            <h3>Under-5 Mortality Rate (per 1k)</h3>
+            <div class="chart-container" style="height: 300px;"><canvas id="mortalityChart"></canvas></div>
+        </div>
+        <div class="chart-box glass">
+            <h3>Life Expectancy by Major Tier</h3>
+            <div class="chart-container" style="height: 300px;"><canvas id="lifeChart"></canvas></div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+{% block scripts %}
+<script>
+    const data = {{ data | tojson }};
+    new Chart(document.getElementById('mortalityChart'), {
+        type: 'line',
+        data: {
+            labels: ['2000', '2005', '2010', '2015', '2024'],
+            datasets: [{
+                label: 'Mortality Rate',
+                data: data.mortality,
+                borderColor: 'var(--accent-neon-blue)',
+                tension: 0.4,
+                fill: true,
+                backgroundColor: 'rgba(0, 242, 255, 0.1)'
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+    new Chart(document.getElementById('lifeChart'), {
+        type: 'bar',
+        data: {
+            labels: Object.keys(data.life_expectancy),
+            datasets: [{
+                data: Object.values(data.life_expectancy),
+                backgroundColor: 'var(--accent-neon-green)'
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+</script>
+{% endblock %}
